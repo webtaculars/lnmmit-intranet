@@ -1,0 +1,47 @@
+
+<div class="jumbotron text-center" ng-if="!main.loggedIn">
+	
+	<div>
+		<h1>Welcome to LNMIIT Intranet Portal</h1>
+	</div>
+
+	<div>
+		<a href="/login" class="btn btn-primary">Login</a>
+	</div>
+</div>
+
+
+
+<div class="row" ng-if="main.loggedIn">
+
+	<div class="col-md-2">
+
+
+	</div>
+
+	<div class="col-md-8" ng-controller="StoryController as story">
+		<div class="row">
+			<div class="panel panel-primary">
+				<div class="panel-heading">Welcome to LNMIIT Intranet Portal</div>
+
+				<div class="panel-body">
+				This is the official institutional Open Access Intranet Portal of The LNM Institute of Information Technology, Jaipur. 
+Visit this portal for information regarding academia, important date and various bodies working in the campus.	
+
+				</div>
+			</div>
+
+			<div class="panel panel-success">
+			</div>
+
+		</div>
+	</div>
+
+
+	<div class="col-md-2">
+
+
+	</div>
+
+
+</div>

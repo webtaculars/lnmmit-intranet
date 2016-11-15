@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html ng-app="MyApp">
+<head>
+	<base href='/'>
+	<title>LNMIIT Intranet</title>
+
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.css">
+
+	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.7/angular.js"></script>
+	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.5.7/angular-route.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.7/angular-resource.js"></script>
+
+	<script type="text/javascript" src="/socket.io/socket.io.js"></script>
+
+
+	<!-- Services -->
+	<script type="text/javascript" src="app/services/authService.js"></script>
+	<script type="text/javascript" src="app/services/userService.js"></script>
+	<script type="text/javascript" src="app/services/storyService.js"></script>
+	<script type="text/javascript" src="app/services/noticeService.js"></script>
+	<script type="text/javascript" src="app/services/postService.js"></script>
+	<script type="text/javascript" src="app/services/searchService.js"></script>
+	<!-- Controllers -->
+	<script type="text/javascript" src="app/controllers/mainCtrl.js"></script>
+	<script type="text/javascript" src="app/controllers/userCtrl.js"></script>
+	<script type="text/javascript" src="app/controllers/storyCtrl.js"></script>
+	<script type="text/javascript" src="app/controllers/noticeCtrl.js"></script>
+	<script type="text/javascript" src="app/controllers/postCtrl.js"></script>
+	<script type="text/javascript" src="app/controllers/searchCtrl.js"></script>
+	<!-- Directives -->
+	<script type="text/javascript" src="app/directives/reverse.js"></script>
+
+	<script type="text/javascript" src="app/app.routes.js"></script>
+	<script type="text/javascript" src="app/app.js"></script>
+
+</head>
+<body ng-controller="MainController as main">
+
+<header>
+	<div class="navbar navbar-default" style="background-color:#2c4066; color: #ffffff">
+		<div class="container">
+			<div class="navbar-header" >
+				<a href="/" class="navbar-brand" style="color: #ffffff"><span class="glyphicon glyphicon-book"></span>LNMIIT Intranet</a>
+			</div>
+
+			<ul class="nav navbar-nav">
+				<li><a href="/users" style="color: #ffffff"></a></li>
+			</ul>
+
+			<ul class="nav navbar-nav navbar-right">
+				<li><a href="/login" style="color: #ffffff">Academics</a></li>
+				<li><a href="/signup" style="color: #ffffff">Research</a></li>
+				<li><a href="/allNotices" style="color: #ffffff">Notice Board</a></li>
+				<li><a href="/signup" style="color: #ffffff">Campus</a></li>
+				<li ng-if="!main.loggedIn"><a href="/login" style="color: #ffffff">Login</a></li>
+				<li ng-if="!main.loggedIn"><a href="/signup" style="color: #ffffff">Signup</a></li>
+				<li ng-if="main.loggedIn"><a href="#" style="color: #ffffff">Hello {{ main.user.username }}</a></li>
+				<li ng-if="main.user.tag == 'admin' "><a href="/addNotice" style="color: #ffffff">Add New Notice</a></li>
+				<li ng-if="main.user.tag == 'post' "><a href="/addPost" style="color: #ffffff">Add New Post</a></li>
+				<li ng-if="main.user.tag == 'post' "><a href="/searchStudent" style="color: #ffffff">Search Student</a></li>
+				<li ng-if="main.loggedIn"><a href="#" ng-click="main.doLogout()" style="color: #ffffff">Logout</a></li>
+			</ul>
+		</div>
+	</div>
+
+
+</header>
+
+
+<main class="container">
+
+	<div ng-view></div>
+</main>
+
+
+</body>
+</html>

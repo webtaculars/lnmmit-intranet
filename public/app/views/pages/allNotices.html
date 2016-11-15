@@ -1,0 +1,27 @@
+<div class="row">
+    <div class="col-md-12">
+        <div class="row">
+            <div class="panel panel-success">
+                <div class="panel-heading">All Notices</div>
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Title</th>
+                            <th>Posted By</th>
+                            <th>Attention</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="each in notice.notices">
+                            <td>{{ each.date }}</td>
+                            <td><a ng-href="{{ each.link }}" target="_blank">{{ each.title }}</td>
+                            <td>{{ each.postedBy }}</td>
+                            <td>{{ each.attention }}</td>
+                        </tr>
+                        </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

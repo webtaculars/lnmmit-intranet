@@ -1,0 +1,18 @@
+<div class="container" ng-controller="AddPostController as user">
+		<div class="row">
+			<div class="col-sm-6 col-md-4 col-md-offset-4">
+				<h1>Add New Post</h1>
+				<form  class="form-sigin" method="post" ng-submit="user.addpost()">
+					Name: <input type="text" name="title" class="form-control" ng-model="user.postData.name">
+					Phone: <input type="text" name="link" class="form-control" ng-model="user.postData.phone">
+					Service: <input type="text" name="date" class="form-control" ng-model="user.postData.service">
+					Send To: <input type="text" name="postedBy" class="form-control" ng-model="user.postData.sendTo">
+					Address: <input type="text" name="attention" class="form-control" ng-model="user.postData.address ">
+					<button type="submit" class="btn btn-danger">Add</button>
+				</form>
+			</div>
+		</div>
+</div>
+
+
+ 
