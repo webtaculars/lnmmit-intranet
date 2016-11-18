@@ -1,0 +1,63 @@
+<div id="container">
+    <div id="sidebar">
+        <div id="sidebar_header">
+            <h3>TASHIP</h3>
+        </div>
+        <ul>
+            <li>
+                <a href="/applyForTa">
+                    <div class="options">Instructions</div>
+                </a>
+            </li>
+            <li>
+                <a href="/viewCourseForTa">
+                    <div class="options">TAship Offered</div>
+                </a>
+            </li>
+            <li>
+                <a href="/applyForm">
+                    <div class="options">Application Form</div>
+                </a>
+            </li>
+            <li>
+                <a href="/resultForTa">
+                    <div class="options">Result</div>
+                </a>
+            </li>
+            <li>
+                <a href="/contact">
+                    <div class="options">Contact Us</div>
+                </a>
+            </li>
+        </ul>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <div class="row">
+            <div class="panel panel-success">
+                <div class="panel-heading">Teacher Assistantship Offered</div>
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Title</th>
+                            <th>Type</th>
+                            <th>No. of UG TA</th>
+                            <th>No. of pG TA</th>
+                            <th>Description</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="each in course.courses">
+                            <td>{{ each.title }}</td>
+                            <td>{{ each.type }}</td>
+                            <td>{{ each.ugTa }}</td>
+                            <td>{{ each.pgTa }}</td>
+                            <td>{{ each.description }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

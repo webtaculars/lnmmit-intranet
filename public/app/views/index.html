@@ -20,6 +20,7 @@
 	<script type="text/javascript" src="app/services/noticeService.js"></script>
 	<script type="text/javascript" src="app/services/postService.js"></script>
 	<script type="text/javascript" src="app/services/searchService.js"></script>
+	<script type="text/javascript" src="app/services/taService.js"></script>
 	<!-- Controllers -->
 	<script type="text/javascript" src="app/controllers/mainCtrl.js"></script>
 	<script type="text/javascript" src="app/controllers/userCtrl.js"></script>
@@ -27,6 +28,7 @@
 	<script type="text/javascript" src="app/controllers/noticeCtrl.js"></script>
 	<script type="text/javascript" src="app/controllers/postCtrl.js"></script>
 	<script type="text/javascript" src="app/controllers/searchCtrl.js"></script>
+	<script type="text/javascript" src="app/controllers/taCtrl.js"></script>
 	<!-- Directives -->
 	<script type="text/javascript" src="app/directives/reverse.js"></script>
 
@@ -58,6 +60,8 @@
 				<li ng-if="main.user.tag == 'admin' "><a href="/addNotice" style="color: #ffffff">Add New Notice</a></li>
 				<li ng-if="main.user.tag == 'post' "><a href="/addPost" style="color: #ffffff">Add New Post</a></li>
 				<li ng-if="main.user.tag == 'post' "><a href="/searchStudent" style="color: #ffffff">Search Student</a></li>
+				<li ng-if="main.user.tag == 'faculty' "><a href="/addCourseForTa" style="color: #ffffff">Add Course for TA's</a></li>
+				<li ng-if="main.user.tag == 'student' "><a href="/applyForTa" style="color: #ffffff">Apply for TA'ship</a></li>
 				<li ng-if="main.loggedIn"><a href="#" ng-click="main.doLogout()" style="color: #ffffff">Logout</a></li>
 			</ul>
 		</div>

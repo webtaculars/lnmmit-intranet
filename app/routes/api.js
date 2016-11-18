@@ -1,9 +1,10 @@
 var User = require('../models/user');
-var Story = require('../models/story');
 var Poststudent = require('../models/poststudent');
+var CourseForTa = require('../models/courseforta');
 var config = require('../../config');
 var Notice = require('../models/notice')
 var Post = require('../models/post')
+var ApplicationForTa = require('../models/applicationforta')
 var secretKey = config.secretKey;
 var nodemailer = require('nodemailer');
 var smtpTransport = require('nodemailer-smtp-transport');
@@ -16,7 +17,8 @@ function createToken(user) {
         id: user._id,
         name: user.name,
         username: user.username,
-        tag: user.tag
+        tag: user.tag,
+        rollNo: user.rollNo
     }, secretKey, {
         expirtesInMinute: 1440
     });
@@ -48,6 +50,7 @@ module.exports = function(app, express, io) {
             name: req.body.name,
             username: req.body.username,
             password: req.body.password,
+            rollNo: req.body.rollNo,
             tag: 'student'
         });
         var token = createToken(user);
@@ -105,6 +108,29 @@ module.exports = function(app, express, io) {
             res.json({
                 success: true,
                 message: 'Admin has been created!',
+                token: token
+            });
+        });
+    });
+
+    api.post('/facultysignup', function(req, res) {
+
+        var user = new User({
+            name: req.body.name,
+            username: req.body.username,
+            password: req.body.password,
+            tag: 'faculty'
+        });
+        var token = createToken(user);
+        user.save(function(err) {
+            if (err) {
+                res.send(err);
+                return;
+            }
+
+            res.json({
+                success: true,
+                message: 'faculty has been created!',
                 token: token
             });
         });
@@ -209,41 +235,6 @@ module.exports = function(app, express, io) {
 
 
 
-
-    api.route('/')
-
-    .post(function(req, res) {
-
-        var story = new Story({
-            creator: req.decoded.id,
-            content: req.body.content,
-
-        });
-
-        story.save(function(err, newStory) {
-            if (err) {
-                res.send(err);
-                return
-            }
-            io.emit('story', newStory)
-            res.json({ message: "New Story Created!" });
-        });
-    })
-
-
-    .get(function(req, res) {
-
-        Story.find({ creator: req.decoded.id }, function(err, stories) {
-
-            if (err) {
-                res.send(err);
-                return;
-            }
-
-            res.send(stories);
-        });
-    });
-
     api.post('/addnotice', function(req, res) {
         var notice = new Notice({
 
@@ -321,7 +312,6 @@ module.exports = function(app, express, io) {
             if (err) {
                 return res.send(err)
             }
-            console.log(student)
             res.send(student)
         })
     });
@@ -344,6 +334,59 @@ module.exports = function(app, express, io) {
         });
 
     });
+
+    api.post('/addcourseforta', function(req, res) {
+        var courseForTa = new CourseForTa({
+
+            title: req.body.title,
+            type: req.body.type,
+            pgTa: req.body.pgTa,
+            ugTa: req.body.ugTa,
+            description: req.body.description,
+            teacherId: req.decoded.id
+
+        });
+
+        courseForTa.save(function(err, newCourse) {
+            if (err) {
+                res.send(err);
+                return
+            }
+            res.json({ message: "New course added!" });
+        });
+    })
+
+    api.get('/viewcourseforta', function(req,res){
+        CourseForTa.find({}, function (err, courses) {
+            if(err){
+                return res.send(err);
+            }
+            res.send(courses)
+        })
+    })
+    
+    api.post('/applicationforta', function(req, res) {
+        var applicationForTa = new applicationForTa({
+
+            name: req.decoded.name,
+            rollNo: req.decoded.rollNo,
+            courseId: req.body.courseId,
+            status: 0,
+            cpi: req.body.cpi,
+            grade: req.body.grade,
+            ugOrPg: req.body.ugOrPg
+
+        });
+
+        applicationForTa.save(function(err, newCourse) {
+            if (err) {
+                res.send(err);
+                return
+            }
+            res.json({ message: "New course added!" });
+        });
+    })
+
 
     return api;
 

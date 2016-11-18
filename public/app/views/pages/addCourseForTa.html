@@ -1,0 +1,18 @@
+<div class="container" ng-controller="AddCourseForTaController as user">
+		<div class="row">
+			<div class="col-sm-6 col-md-4 col-md-offset-4">
+				<h1>Add New Course for TA</h1>
+				<form  class="form-sigin" method="post" ng-submit="user.addcourse()">
+					Title: <input type="text" name="title" class="form-control" ng-model="user.courseData.title">
+					Type: <input type="text" name="type" class="form-control" ng-model="user.courseData.type">
+					No. of UG Ta's: <input type="text" name="ug" class="form-control" ng-model="user.courseData.ugTa">
+					No. of PG Ta's: <input type="text" name="postedBy" class="form-control" ng-model="user.courseData.pgTa">
+					Description: <input type="text" name="attention" class="form-control" ng-model="user.courseData.description">
+					<button type="submit" class="btn btn-danger">Add</button>
+				</form>
+			</div>
+		</div>
+</div>
+
+
+ 
