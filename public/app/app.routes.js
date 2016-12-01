@@ -95,6 +95,26 @@ angular.module('appRoutes', ['ngRoute'])
 
     })
 
+    .when('/viewApplicationForTa', {
+        templateUrl: 'app/views/pages/viewApplicationForTa.html',
+        controller: 'ViewApplicationForTaController',
+        controllerAs: 'application',
+        resolve: {
+            applications: function(Application) {
+                return Application.allApplications();
+            }
+        }
+    })
+    .when('/acceptedApplicationForTa', {
+        templateUrl: 'app/views/pages/acceptedApplication.html',
+        controller: 'AcceptedApplicationForTaController',
+        controllerAs: 'application',
+        resolve: {
+            applications: function(Application) {
+                return Application.allAcceptedApplications();
+            }
+        }
+    })
     $locationProvider.html5Mode(true);
 
 })

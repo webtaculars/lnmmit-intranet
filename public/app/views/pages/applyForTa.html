@@ -14,7 +14,7 @@
                     <div class="options">TAship Offered</div>
                 </a>
             </li>
-            <li>
+            <li ng-if="main.user.tag == 'student' ">
                 <a href="/applyForm">
                     <div class="options">Application Form</div>
                 </a>
@@ -29,6 +29,16 @@
                     <div class="options">Contact Us</div>
                 </a>
             </li>
+            <li ng-if="main.user.tag == 'faculty' ">
+                <a href="/addCourseForTa">Add Course for TA's</a>
+            </li>
+            <li ng-if="main.user.tag == 'faculty' ">
+                <a href="/viewApplicationForTa">View applicants</a>
+            </li>
+                        <li ng-if="main.user.tag == 'faculty' ">
+                <a href="/acceptedApplicationForTa">View Accepted applicants</a>
+            </li>
+
         </ul>
     </div>
 </div>

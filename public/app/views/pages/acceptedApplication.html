@@ -35,10 +35,9 @@
             <li ng-if="main.user.tag == 'faculty' ">
                 <a href="/viewApplicationForTa">View applicants</a>
             </li>
-                        <li ng-if="main.user.tag == 'faculty' ">
+            <li ng-if="main.user.tag == 'faculty' ">
                 <a href="/acceptedApplicationForTa">View Accepted applicants</a>
             </li>
-
         </ul>
     </div>
 </div>
@@ -46,26 +45,30 @@
     <div class="col-md-12">
         <div class="row">
             <div class="panel panel-success">
-                <div class="panel-heading">Teacher Assistantship Offered</div>
+                <div class="panel-heading">Applicatants</div>
                 <table class="table table-striped">
                     <thead>
                         <tr>
-                            <th>Title</th>
-                            <th>Type</th>
+                            <th>Name</th>
+                            <th>Roll No</th>
                             <th>Course ID</th>
-                            <th>No. of UG TA</th>
-                            <th>No. of pG TA</th>
-                            <th>Description</th>
+                            <th>UG or PG</th>
+                            <th>CPI</th>
+                            <th>Grade</th>
+                            <th>Action</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr ng-repeat="each in course.courses">
-                            <td>{{ each.title }}</td>
-                            <td>{{ each.type }}</td>
+                        <tr ng-repeat="each in application.applications">
+                            <td>{{ each.name }}</td>
+                            <td>{{ each.rollNo }}</td>
                             <td>{{ each.courseId }}</td>
-                            <td>{{ each.ugTa }}</td>
-                            <td>{{ each.pgTa }}</td>
-                            <td>{{ each.description }}</td>
+                            <td>{{ each.ugOrPg }}</td>
+                            <td>{{ each.cpi }}</td>
+                            <td>{{ each.grade }}</td>
+                            <td>
+                                <button type="submit" class="btn btn-info btn-sm" ng-click="application.approve(each._id)">Send Mail</button>
+                            </td>
                         </tr>
                     </tbody>
                 </table>

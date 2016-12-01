@@ -4,10 +4,11 @@
 				<h1>Signup!</h1>
 				<form  class="form-sigin" method="post" ng-submit="user.signupUser()">
 					Name: <input type="text" name="name" class="form-control" ng-model="user.userData.name">
-					Username: <input type="text" name="username" class="form-control" ng-model="user.userData.username">
+					Email (use your Lnmiit email id): <input type="text" name="email" class="form-control" ng-model="user.userData.email" ng-change="user.validate()">
 					Password: <input type="password" name="password" class="form-control" ng-model="user.userData.password">
 					Roll No.: <input type="text" name="rollNo" class="form-control" ng-model="user.userData.rollNo">
 					<button type="submit" class="btn btn-danger">Signup</button>
+					{{user.message}}
 				</form>
 			</div>
 		</div>

@@ -5,6 +5,7 @@ var config = require('../../config');
 var Notice = require('../models/notice')
 var Post = require('../models/post')
 var ApplicationForTa = require('../models/applicationforta')
+var Counter = require('../models/counter')
 var secretKey = config.secretKey;
 var nodemailer = require('nodemailer');
 var smtpTransport = require('nodemailer-smtp-transport');
@@ -16,7 +17,7 @@ function createToken(user) {
     var token = jsonwebtoken.sign({
         id: user._id,
         name: user.name,
-        username: user.username,
+        email: user.email,
         tag: user.tag,
         rollNo: user.rollNo
     }, secretKey, {
@@ -27,11 +28,34 @@ function createToken(user) {
     return token;
 
 }
+var smtpTransport = nodemailer.createTransport("SMTP", {
+    service: "Gmail",
+    auth: {
+        user: "y13uc010@lnmiit.ac.in",
+        pass: "9829215083"
+    }
+});
+var rand, mailOptions, host, link;
 
 module.exports = function(app, express, io) {
 
 
     var api = express.Router();
+    api.get('/verify', function(req, res) {
+        console.log(req.protocol + ":/" + req.get('host'));
+        if ((req.protocol + "://" + req.get('host')) == ("http://" + host)) {
+            console.log("Domain is matched. Information is from Authentic email");
+            if (req.query.id == rand) {
+                console.log("email is verified");
+                res.end("<h1>Email " + mailOptions.to + " is been Successfully verified. Please click <a href="+"/"+">here</a> to login");
+            } else {
+                console.log("email is not verified");
+                res.end("<h1>Bad Request</h1>");
+            }
+        } else {
+            res.end("<h1>Request is from unknown source");
+        }
+    });
 
     api.get('/all_stories', function(req, res) {
 
@@ -48,30 +72,47 @@ module.exports = function(app, express, io) {
 
         var user = new User({
             name: req.body.name,
-            username: req.body.username,
+            email: req.body.email,
             password: req.body.password,
             rollNo: req.body.rollNo,
             tag: 'student'
         });
-        var token = createToken(user);
         user.save(function(err) {
             if (err) {
                 res.send(err);
                 return;
             }
-
-            res.json({
-                success: true,
-                message: 'User has been created!',
-                token: token
+            rand = Math.floor((Math.random() * 100) + 54);
+            host = req.get('host');
+            link = "http://" + req.get('host') + "/api/verify?id=" + rand;
+            mailOptions = {
+                to: req.body.email,
+                subject: "Please confirm your Email account",
+                html: "Hello,<br> Please Click on the link to verify your email.<br><a href=" + link + ">Click here to verify</a>"
+            }
+            console.log(mailOptions);
+            smtpTransport.sendMail(mailOptions, function(error, response) {
+                if (error) {
+                    console.log(error);
+                    res.end("error");
+                } else {
+                    console.log("Message sent: " + response.message);
+                    res.end("sent");
+                }
             });
+            /*            res.json({
+                            success: true,
+                            message: 'User has been created!',
+                            token: token
+                        });
+            */
         });
     });
     api.post('/postmastersignup', function(req, res) {
 
         var user = new User({
             name: req.body.name,
-            username: req.body.username,
+            email: req.body.email,
             password: req.body.password,
             tag: 'post'
         });
@@ -94,7 +135,7 @@ module.exports = function(app, express, io) {
 
         var user = new User({
             name: req.body.name,
-            username: req.body.username,
+            email: req.body.email,
             password: req.body.password,
             tag: 'admin'
         });
@@ -117,7 +158,7 @@ module.exports = function(app, express, io) {
 
         var user = new User({
             name: req.body.name,
-            username: req.body.username,
+            email: req.body.email,
             password: req.body.password,
             tag: 'faculty'
         });
@@ -165,8 +206,8 @@ module.exports = function(app, express, io) {
     api.post('/login', function(req, res) {
 
         User.findOne({
-            username: req.body.username
-        }).select('name username password tag').exec(function(err, user) {
+            email: req.body.email
+        }).select('name email password rollNo tag').exec(function(err, user) {
 
             if (err) throw err;
 
@@ -321,7 +362,7 @@ module.exports = function(app, express, io) {
             from: '"LNMIIT 👥" <ag251994@gmail.com>', // sender address 
             to: req.params.email, // list of receivers 
             subject: 'Hello' + req.params.name, // Subject line 
-            text: 'We have received your courier. Please collect it from your caretaker by evening.  🐴', 
+            text: 'We have received your courier. Please collect it from your caretaker by evening.  🐴',
         };
 
         transporter.sendMail(mailOptions, function(error, info) {
@@ -336,57 +377,143 @@ module.exports = function(app, express, io) {
     });
 
     api.post('/addcourseforta', function(req, res) {
-        var courseForTa = new CourseForTa({
 
-            title: req.body.title,
-            type: req.body.type,
-            pgTa: req.body.pgTa,
-            ugTa: req.body.ugTa,
-            description: req.body.description,
-            teacherId: req.decoded.id
-
-        });
-
-        courseForTa.save(function(err, newCourse) {
+        var counter = 0;
+        Counter.findOne({}, {}, { sort: { 'value': -1 } }, function(err, count) {
             if (err) {
-                res.send(err);
-                return
+                return res.send(err)
             }
-            res.json({ message: "New course added!" });
-        });
+            counter = count.value;
+            console.log(counter)
+            console.log(count)
+
+            var courseForTa = new CourseForTa({
+
+                title: req.body.title,
+                type: req.body.type,
+                pgTa: req.body.pgTa,
+                ugTa: req.body.ugTa,
+                description: req.body.description,
+                teacherId: req.decoded.id,
+                courseId: counter + 1
+
+
+            });
+            Counter.create({ value: counter + 1 }, function(err, count) {
+                console.log(count)
+            })
+
+            courseForTa.save(function(err, newCourse) {
+                if (err) {
+                    res.send(err);
+                    return
+                }
+                res.json({ message: "New course added!" });
+            });
+
+
+        })
+
     })
 
-    api.get('/viewcourseforta', function(req,res){
-        CourseForTa.find({}, function (err, courses) {
-            if(err){
+    api.get('/viewcourseforta', function(req, res) {
+        CourseForTa.find({}, function(err, courses) {
+            if (err) {
                 return res.send(err);
             }
+            console.log(courses)
             res.send(courses)
         })
     })
-    
+
     api.post('/applicationforta', function(req, res) {
-        var applicationForTa = new applicationForTa({
-
-            name: req.decoded.name,
-            rollNo: req.decoded.rollNo,
-            courseId: req.body.courseId,
-            status: 0,
-            cpi: req.body.cpi,
-            grade: req.body.grade,
-            ugOrPg: req.body.ugOrPg
-
-        });
-
-        applicationForTa.save(function(err, newCourse) {
+        CourseForTa.findOne({ "courseId": req.body.courseId }, function(err, courses) {
             if (err) {
+                return res.send(err);
+            }
+            console.log(courses)
+            var teacherId = courses.teacherId
+            var applicationForTa = new ApplicationForTa({
+
+                name: req.decoded.name,
+                rollNo: req.decoded.rollNo,
+                courseId: req.body.courseId,
+                status: 0,
+                cpi: req.body.cpi,
+                grade: req.body.grade,
+                ugOrPg: req.body.ugOrPg,
+                teacherId: teacherId
+
+            });
+
+            console.log('ss')
+            applicationForTa.save(function(err, newCourse) {
+                if (err) {
+                    console.log(err)
+                    res.send(err);
+                    return
+                }
+                console.log(newCourse)
+                res.json({ message: "New course added!" });
+            });
+
+        })
+
+    })
+
+    api.get('/viewapplicationforta', function(req, res) {
+        ApplicationForTa.find({ "teacherId": req.decoded.id, "status": 0 }, function(err, courses) {
+            if (err) {
+                return res.send(err);
+            }
+            console.log(courses)
+            res.send(courses)
+        })
+    })
+
+    api.get('/acceptedapplicationforta', function(req, res) {
+        ApplicationForTa.find({ "teacherId": req.decoded.id, "status": 1 }, function(err, courses) {
+            if (err) {
+                return res.send(err);
+            }
+            console.log(courses)
+            res.send(courses)
+        })
+    })
+
+    api.get('/rejectedapplicationforta', function(req, res) {
+        ApplicationForTa.find({ "teacherId": req.decoded.id, "status": -1 }, function(err, courses) {
+            if (err) {
+                return res.send(err);
+            }
+            console.log(courses)
+            res.send(courses)
+        })
+    })
+
+    api.post('/approvestatus', function(req, res) {
+        console.log('fd')
+        ApplicationForTa.findOneAndUpdate({ "_id": req.body._id }, { $set: { "status": 1 } }, { new: true }, function(err, application) {
+            if (err) {
+                console.log(err)
                 res.send(err);
                 return
             }
-            res.json({ message: "New course added!" });
-        });
+            console.log(application)
+            res.json({ message: "approved" })
+        })
     })
-
+    api.post('/rejectstatus', function(req, res) {
+        ApplicationForTa.findOneAndUpdate({ "_id": req.body._id }, { $set: { "status": -1 } }, { new: true }, function(err, application) {
+            if (err) {
+                console.log(err)
+                res.send(err);
+                return
+            }
+            console.log(application)
+            res.json({ message: "rejected" })
+        })
+    })
 
     return api;
 

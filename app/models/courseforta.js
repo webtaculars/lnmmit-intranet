@@ -8,5 +8,6 @@ module.exports = mongoose.model('Courseforta', {
     pgTa : {type:String, required: true},
     ugTa : {type:String, required: true},
     description : {type:String, required: true},
-    teacherId : {type:String, required: true}
+    teacherId : {type:String, required: true},
+    courseId : {type: Number, required: true}
 });

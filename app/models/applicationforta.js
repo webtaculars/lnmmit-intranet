@@ -9,5 +9,6 @@ module.exports = mongoose.model('applicationforta', {
     status : {type:Number, required: true},
     ugOrPg : {type:String, required: true},
     cpi : {type:String, required: true},
-    grade : {type:String, required: true}
+    grade : {type:String, required: true},
+    teacherId: {type: String, required: true}
 });

@@ -1,0 +1,13 @@
+<div class="container" ng-controller="ApplyFormController as user">
+    <div class="row">
+        <div class="col-sm-6 col-md-4 col-md-offset-4">
+            <h1>Apply for TA</h1>
+            <form class="form-sigin" method="post" ng-submit="user.applicationForTa()">
+                Course Id: <input type="text" name="cpi" class="form-control" ng-model="user.courseData.courseId"> 
+                CPI: <input type="text" name="cpi" class="form-control" ng-model="user.courseData.cpi"> 
+                Grade in Subject:<input type="text" name="grade" class="form-control" ng-model="user.courseData.grade"> UG or PG: <input type="text" name="date" class="form-control" ng-model="user.courseData.ugOrPg">
+                <button type="submit" class="btn btn-danger">Add</button>
+            </form>
+        </div>
+    </div>
+</div>
