@@ -31,8 +31,8 @@ function createToken(user) {
 var smtpTransport = nodemailer.createTransport("SMTP", {
     service: "Gmail",
     auth: {
-        user: "y13uc010@lnmiit.ac.in",
-        pass: "9829215083"
+        user: "email",
+        pass: "password"
     }
 });
 var rand, mailOptions, host, link;
