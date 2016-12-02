@@ -29,19 +29,23 @@
                     <div class="options">Contact Us</div>
                 </a>
             </li>
-            <li ng-if="main.user.tag == 'faculty' ">
-                <a href="/addCourseForTa">Add Course for TA's</a>
+ <li ng-if="main.user.tag == 'faculty' ">
+                <a href="/addCourseForTa"> <div class="options">Add Course for TA's<div></a>
             </li>
             <li ng-if="main.user.tag == 'faculty' ">
-                <a href="/viewApplicationForTa">View applicants</a>
+                <a href="/viewApplicationForTa"> <div class="options">View applicants<div></a>
             </li>
-                        <li ng-if="main.user.tag == 'faculty' ">
-                <a href="/acceptedApplicationForTa">View Accepted applicants</a>
+            <li ng-if="main.user.tag == 'faculty' ">
+                <a href="/acceptedApplicationForTa"> <div class="options"> Accepted applicants<div></a>
             </li>
-
+            <li ng-if="main.user.tag == 'faculty' ">
+                <a href="/rejectedApplicationForTa"> <div class="options"> Rejected applicants<div></a>
+            </li>
         </ul>
     </div>
 </div>
+<div class="main-content">
+    <div id="contents">
 <div class="row">
     <div class="col-md-12">
         <div class="row">
@@ -71,10 +75,13 @@
                                 <button type="submit" class="btn btn-info btn-sm" ng-click="application.approve(each._id)">Approve</button>
                                 <button type="submit" class="btn btn-info btn-sm" ng-click="application.reject(each._id)">Reject</button>
                             </td>
+                            <td>{{application.message}}</td>
                         </tr>
                     </tbody>
                 </table>
             </div>
         </div>
     </div>
+</div>
+</div>
 </div>

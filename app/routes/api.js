@@ -8,8 +8,8 @@ var ApplicationForTa = require('../models/applicationforta')
 var Counter = require('../models/counter')
 var secretKey = config.secretKey;
 var nodemailer = require('nodemailer');
-var smtpTransport = require('nodemailer-smtp-transport');
-
+var async = require('async');
+var crypto = require('crypto')
 var jsonwebtoken = require('jsonwebtoken');
 
 function createToken(user) {
@@ -47,7 +47,7 @@ module.exports = function(app, express, io) {
             console.log("Domain is matched. Information is from Authentic email");
             if (req.query.id == rand) {
                 console.log("email is verified");
-                res.end("<h1>Email " + mailOptions.to + " is been Successfully verified. Please click <a href="+"/"+">here</a> to login");
+                res.end("<h1>Email " + mailOptions.to + " is been Successfully verified. Please click <a href=" + "/" + ">here</a> to login");
             } else {
                 console.log("email is not verified");
                 res.end("<h1>Bad Request</h1>");
@@ -100,12 +100,6 @@ module.exports = function(app, express, io) {
                     res.end("sent");
                 }
             });
-            /*            res.json({
-                            success: true,
-                            message: 'User has been created!',
-                            token: token
-                        });
-            */
         });
     });
     api.post('/postmastersignup', function(req, res) {
@@ -177,6 +171,100 @@ module.exports = function(app, express, io) {
         });
     });
 
+    api.post('/forgotpassword', function(req, res, next) {
+        async.waterfall([
+            function(done) {
+                crypto.randomBytes(20, function(err, buf) {
+                    var token = buf.toString('hex');
+                    done(err, token);
+                });
+            },
+            function(token, done) {
+                User.findOne({ email: req.body.email }, function(err, identity) {
+                    if (!identity) {
+                        res.json({ "message": "No account with such email exists" });
+                    }
+
+                    identity.resetPasswordToken = token;
+                    identity.resetPasswordExpires = Date.now() + 3600000; // 1 hour
+
+                    identity.save(function(err) {
+                        done(err, token, identity);
+                    });
+                });
+            },
+            function(token, user, done) {
+                var mailOptions = {
+                    to: user.email,
+                    from: '"LNMIIT 👥" <y13uc010@lnmiit.ac.in>', // sender address ,
+                    subject: 'LNMIIT Intranet password change',
+                    text: 'You are receiving this because you (or someone else) have requested the reset of the password for your account at LNMIIT Intranet Portal.\n\n' +
+                        'Please click on the following link, or paste this into your browser to complete the process:\n\n' +
+                        'http://' + req.headers.host + '/reset/' + token + '\n\n' +
+                        'If you did not request this, please ignore this email and your password will remain unchanged.\n'
+                };
+
+                // send mail with defined transport object
+                smtpTransport.sendMail(mailOptions, function(error, info) {
+                    if (error) {
+                        return console.log(error);
+                    }
+                    console.log('Message sent: ' + info.response);
+                    res.json({ 'message': 'An email has been sent to ' + user.email + ' with further instructions for password reset.' });
+                });
+            }
+        ])
+    });
+
+    api.get('/reset/:token', function(req, res) {
+        user.findOne({ resetPasswordToken: req.params.token, resetPasswordExpires: { $gt: Date.now() } }, function(err, identity) {
+            if (!identity) {
+                res.json({ 'error': 'Password reset token is invalid or has expired.' });
+            } else {
+                res.json({ "message": "User found" });
+            }
+        });
+    });
+
+    api.post('/reset', function(req, res) {
+        async.waterfall([
+            function(done) {
+                User.findOne({ email: req.body.email}, function(err, identity) {
+                    if (!identity) {
+                        res.json({ 'error': 'Password reset token is invalid or has expired.' });
+                        return res.redirect('back');
+                    }
+
+                    identity.password = req.body.password;
+                    identity.resetPasswordToken = undefined;
+                    identity.resetPasswordExpires = undefined;
+
+                    identity.save(function(err) {
+                        done(err, identity);
+                    });
+                });
+            },
+            function(user, done) {
+                var mailOptions = {
+                    to: user.email,
+                    from: '"LNMIIT 👥" <y13uc010@lnmiit.ac.in>', // sender address ,
+                    subject: 'Your LNMIIT Intranet Portal password has been changed',
+                    text: 'Hello,\n\n' +
+                        'This is a confirmation that the password for your account ' + user.email + ' has just been changed.\n'
+                };
+
+                // send mail with defined transport object
+                smtpTransport.sendMail(mailOptions, function(error, info) {
+                    if (error) {
+                        return console.log(error);
+                    }
+                    console.log('Message sent: ' + info.response);
+                    res.json({ 'success': 'Your password has been changed!' });
+                });
+
+            }
+        ])
+    });
 
     api.get('/users', function(req, res) {
 
@@ -322,6 +410,7 @@ module.exports = function(app, express, io) {
             if (err) {
                 return res.send(err)
             }
+            console.log(post)
             res.send(post)
         })
     });
@@ -356,26 +445,30 @@ module.exports = function(app, express, io) {
             res.send(student)
         })
     });
-
-    app.post('/sendmail/:email/:name', function(req, res) {
-        var mailOptions = {
-            from: '"LNMIIT 👥" <ag251994@gmail.com>', // sender address 
-            to: req.params.email, // list of receivers 
-            subject: 'Hello' + req.params.name, // Subject line 
-            text: 'We have received your courier. Please collect it from your caretaker by evening.  🐴',
-        };
-
-        transporter.sendMail(mailOptions, function(error, info) {
-            if (error) {
-                return console.log(error);
+    api.post('/sendmail', function(req, res) {
+        Poststudent.find({ rollNo: req.body.rollNo }, function(err, student) {
+            if (err) {
+                return res.send(err)
             }
-            console.log('Message sent: ' + info.response);
-
-            res.json({ message: "done" })
+            var email = student[0].email;
+            var name = student[0].name;
+            var mailOptions = {
+                from: '"LNMIIT 👥" <y13uc010@lnmiit.ac.in>', // sender address 
+                to: email, // list of receivers 
+                subject: 'Hello ' + name, // Subject line 
+                text: 'We have received a courier post on your name. Please collect it from Mr. Daya Shankar from the academics area',
+            };
+            smtpTransport.sendMail(mailOptions, function(error, response) {
+                if (error) {
+                    console.log(error);
+                    res.end("error");
+                } else {
+                    console.log("Message sent: " + response.message);
+                    res.end("sent");
+                }
+            });
         });
-
     });
-
     api.post('/addcourseforta', function(req, res) {
 
         var counter = 0;
@@ -437,6 +530,7 @@ module.exports = function(app, express, io) {
 
                 name: req.decoded.name,
                 rollNo: req.decoded.rollNo,
+                email: req.decoded.email,
                 courseId: req.body.courseId,
                 status: 0,
                 cpi: req.body.cpi,
@@ -504,6 +598,7 @@ module.exports = function(app, express, io) {
         })
     })
     api.post('/rejectstatus', function(req, res) {
+
         ApplicationForTa.findOneAndUpdate({ "_id": req.body._id }, { $set: { "status": -1 } }, { new: true }, function(err, application) {
             if (err) {
                 console.log(err)
@@ -514,6 +609,36 @@ module.exports = function(app, express, io) {
             res.json({ message: "rejected" })
         })
     })
+
+    api.post('/sendapprovalmail', function(req, res) {
+        ApplicationForTa.find({ "_id": req.body._id }, function(err, users) {
+            if (err) {
+                return res.send(err);
+            }
+            var name = users[0].name
+            var rollNo = users[0].rollNo
+            var email = users[0].email
+            console.log(users)
+
+            var mailOptions = {
+                from: '"LNMIIT 👥" <y13uc010@lnmiit.ac.in>', // sender address 
+                to: email, // list of receivers 
+                subject: 'Hello ' + name, // Subject line 
+                text: 'Your application for TAship has been approved. We will be shortly mailing you the further details. Thanks',
+            };
+            console.log(mailOptions);
+            smtpTransport.sendMail(mailOptions, function(error, response) {
+                if (error) {
+                    console.log(error);
+                    res.end("error");
+                } else {
+                    console.log("Message sent: " + response.message);
+                    res.end("sent");
+                }
+            });
+        })
+
+    });
 
     return api;
 

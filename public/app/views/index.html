@@ -5,13 +5,13 @@
 	<title>LNMIIT Intranet</title>
 
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.css">
+	<link rel="stylesheet" href="app/css/style.css">
 
 	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.7/angular.js"></script>
 	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.5.7/angular-route.js"></script>
 	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.7/angular-resource.js"></script>
 
 	<script type="text/javascript" src="/socket.io/socket.io.js"></script>
-
 
 	<!-- Services -->
 	<script type="text/javascript" src="app/services/authService.js"></script>
@@ -51,12 +51,13 @@
 
 			<ul class="nav navbar-nav navbar-right">
 				<li><a href="/allNotices" style="color: #ffffff">Notice Board</a></li>
-				<li><a href="/signup" style="color: #ffffff">Campus</a></li>
+				<li><a href="/campus" style="color: #ffffff">Campus</a></li>
 				<li ng-if="!main.loggedIn"><a href="/login" style="color: #ffffff">Login</a></li>
 				<li ng-if="!main.loggedIn"><a href="/signup" style="color: #ffffff">Signup</a></li>
 				<li ng-if="main.loggedIn"><a href="#" style="color: #ffffff">Hello {{ main.user.name }}</a></li>
 				<li ng-if="main.user.tag == 'admin' "><a href="/addNotice" style="color: #ffffff">Add New Notice</a></li>
 				<li ng-if="main.user.tag == 'post' "><a href="/addPost" style="color: #ffffff">Add New Post</a></li>
+				<li ng-if="main.user.tag == 'post' "><a href="/viewPost" style="color: #ffffff">View Post</a></li>
 				<li ng-if="main.user.tag == 'post' "><a href="/searchStudent" style="color: #ffffff">Search Student</a></li>
 				<li ng-if="main.loggedIn"><a href="/applyForTa" style="color: #ffffff">TA'ship Portal</a></li>
 				<li ng-if="main.loggedIn"><a href="#" ng-click="main.doLogout()" style="color: #ffffff">Logout</a></li>

@@ -1,0 +1,29 @@
+<div class="row">
+    <div class="col-md-12">
+        <div class="row">
+            <div class="panel panel-success">
+                <div class="panel-heading">All Posts</div>
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Phone</th>
+                            <th>Service</th>
+                            <th>Send To</th>
+                            <th>Address</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="each in post.posts">
+                            <td>{{ each.name }}</td>
+                            <td>{{ each.phone }}</td>
+                            <td>{{ each.service }}</td>
+                            <td>{{ each.sendTo }}</td>
+                            <td>{{ each.address }}</td>
+                        </tr>
+                        </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

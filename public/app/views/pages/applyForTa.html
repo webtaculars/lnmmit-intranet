@@ -1,3 +1,4 @@
+
 <div id="container">
     <div id="sidebar">
         <div id="sidebar_header">
@@ -29,16 +30,18 @@
                     <div class="options">Contact Us</div>
                 </a>
             </li>
-            <li ng-if="main.user.tag == 'faculty' ">
-                <a href="/addCourseForTa">Add Course for TA's</a>
+ <li ng-if="main.user.tag == 'faculty' ">
+                <a href="/addCourseForTa"> <div class="options">Add Course for TA's<div></a>
             </li>
             <li ng-if="main.user.tag == 'faculty' ">
-                <a href="/viewApplicationForTa">View applicants</a>
+                <a href="/viewApplicationForTa"> <div class="options">View applicants<div></a>
             </li>
-                        <li ng-if="main.user.tag == 'faculty' ">
-                <a href="/acceptedApplicationForTa">View Accepted applicants</a>
+            <li ng-if="main.user.tag == 'faculty' ">
+                <a href="/acceptedApplicationForTa"> <div class="options"> Accepted applicants<div></a>
             </li>
-
+            <li ng-if="main.user.tag == 'faculty' ">
+                <a href="/rejectedApplicationForTa"> <div class="options"> Rejected applicants<div></a>
+            </li>
         </ul>
     </div>
 </div>
@@ -82,6 +85,5 @@
                 </ul>
             </p>
         </div>
-        <button class="btn primary"><a href="/applyForm">Apply here</a></button>
     </div>
 </div>

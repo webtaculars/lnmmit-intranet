@@ -18,14 +18,7 @@ angular.module('taService', [])
 		return $http.post('/api/applicationforta', courseData);
 	}
 
-	courseFactory.allApplications = function(applicationData) {
-		return $http.get('/api/viewapplicationforta', applicationData);
-	}
 
-
-	courseFactory.allAcceptedApplications = function(applicationData) {
-		return $http.get('/api/acceptedapplicationforta', applicationData);
-	}
 
 	return courseFactory;
 
@@ -43,6 +36,8 @@ angular.module('taService', [])
 		var idData = {
 			"_id" : id
 		}
+		        console.log(' ervicessapproved bc')
+
 		return $http.post('/api/approvestatus', idData);
 	}
 
@@ -50,7 +45,21 @@ angular.module('taService', [])
 		var idData = {
 			"_id" : id
 		}
-		return $http.post('/api/approvestatus', idData);
+		return $http.post('/api/rejectstatus', idData);
+	}
+	courseFactory.sendMail = function(id) {
+		console.log(id)
+		var idData = {
+			"_id" : id
+		}
+		return $http.post('/api/sendapprovalmail', idData);
+	}
+	courseFactory.allAcceptedApplications = function(applicationData) {
+		return $http.get('/api/acceptedapplicationforta', applicationData);
+	}
+
+	courseFactory.allRejectedApplications = function(applicationData) {
+		return $http.get('/api/rejectedapplicationforta', applicationData);
 	}
 
 	return courseFactory;

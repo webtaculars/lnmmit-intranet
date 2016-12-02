@@ -20,6 +20,27 @@ angular.module('authService', [])
             })
     }
 
+    authFactory.forgot = function(email) {
+
+        return $http.post('/api/forgotpassword', {
+                email: email,
+            })
+            .success(function(data) {
+                return data;
+            })
+    }
+
+    authFactory.reset = function(email, password) {
+
+        return $http.post('/api/reset', {
+                email: email,
+                password: password
+            })
+            .success(function(data) {
+                return data;
+            })
+    }
+
     authFactory.logout = function() {
         AuthToken.setToken();
     }

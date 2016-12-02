@@ -16,3 +16,14 @@ angular.module('postCtrl', ['postService'])
 	}
 
 })
+
+.controller('ViewPostController', function(Post, socketio, posts) {
+
+	var vm = this;
+	vm.posts = posts.data;
+
+	socketio.on('post', function(data) {
+			vm.posts.push(data);
+	});
+
+})

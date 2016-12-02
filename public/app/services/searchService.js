@@ -10,6 +10,13 @@ angular.module('searchService', [])
 		return $http.post('/api/findstudent', searchData);
 	}
 
+	SearchFactory.sendMail = function(rollNo) {
+		var data = {
+			"rollNo" : rollNo
+		}
+		return $http.post('/api/sendmail', data);
+	}
+
 	return SearchFactory;
 
 })

@@ -8,8 +8,9 @@
 					Email: <input type="text" name="email" class="form-control" ng-model="login.loginData.email">
 
 					Password: <input type="password" name="password" class="form-control" ng-model="login.loginData.password">
-
+					<p><a href="/forgot">Forgot Password</a></p>
 					<button type="submit" class="btn btn-success">Login</button>
+					<p>{{login.error}}</p>
 				</form>
 			</div>
 

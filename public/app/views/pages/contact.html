@@ -29,7 +29,7 @@
                     <div class="options">Contact Us</div>
                 </a>
             </li>
-            <li ng-if="main.user.tag == 'faculty' ">
+  <li ng-if="main.user.tag == 'faculty' ">
                 <a href="/addCourseForTa"> <div class="options">Add Course for TA's<div></a>
             </li>
             <li ng-if="main.user.tag == 'faculty' ">
@@ -41,44 +41,31 @@
             <li ng-if="main.user.tag == 'faculty' ">
                 <a href="/rejectedApplicationForTa"> <div class="options"> Rejected applicants<div></a>
             </li>
-        </ul>
+       </ul>
     </div>
 </div>
 <div class="main-content">
     <div id="contents">
 <div class="row">
-    <div class="col-md-12">
+    <div class="col-md-2">
+    </div>
+    <div class="col-md-8">
         <div class="row">
+            <div class="panel panel-primary">Contact Info</div>
+                <div class="panel-body">
+In case of any query/problem related to course allocation one should contact course coordinator.
+
+                </div>                <div class="panel-body">
+For any Technical details you can write to us at sandeep.saini@lnmiit.ac.in OR ag251994@gmail.com.
+
+
+                </div>
+            </div>
             <div class="panel panel-success">
-                <div class="panel-heading">Applicatants</div>
-                <table class="table table-striped">
-                    <thead>
-                        <tr>
-                            <th>Name</th>
-                            <th>Roll No</th>
-                            <th>Course ID</th>
-                            <th>UG or PG</th>
-                            <th>CPI</th>
-                            <th>Grade</th>
-                            <th>Action</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr ng-repeat="each in application.applications">
-                            <td>{{ each.name }}</td>
-                            <td>{{ each.rollNo }}</td>
-                            <td>{{ each.courseId }}</td>
-                            <td>{{ each.ugOrPg }}</td>
-                            <td>{{ each.cpi }}</td>
-                            <td>{{ each.grade }}</td>
-                            <td>
-                                <button type="submit" class="btn btn-info btn-sm" ng-click="application.sendMail(each._id)">Send Mail</button>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
             </div>
         </div>
+    </div>
+    <div class="col-md-2">
     </div>
 </div>
 </div>

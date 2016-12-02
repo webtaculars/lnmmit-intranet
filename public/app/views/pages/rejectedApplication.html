@@ -29,7 +29,8 @@
                     <div class="options">Contact Us</div>
                 </a>
             </li>
-            <li ng-if="main.user.tag == 'faculty' ">
+  
+    <li ng-if="main.user.tag == 'faculty' ">
                 <a href="/addCourseForTa"> <div class="options">Add Course for TA's<div></a>
             </li>
             <li ng-if="main.user.tag == 'faculty' ">
@@ -72,7 +73,7 @@
                             <td>{{ each.cpi }}</td>
                             <td>{{ each.grade }}</td>
                             <td>
-                                <button type="submit" class="btn btn-info btn-sm" ng-click="application.sendMail(each._id)">Send Mail</button>
+                                <button type="submit" class="btn btn-info btn-sm" ng-click="application.approve(each._id)">Approve</button>
                             </td>
                         </tr>
                     </tbody>

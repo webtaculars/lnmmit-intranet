@@ -59,20 +59,20 @@ angular.module('taCtrl', ['taService'])
     vm.applications = applications.data;
 
     vm.sendMail = function(id) {
-        Application.approve(id)
+        console.log('afsd')
+        Application.sendMail(id)
             .then(function(response) {
                 vm.postData = {};
                 console.log(response)
                 vm.message = response.data.message;
-                $location.path('/viewApplicationForTa');
+                $location.path('/acceptedApplicationForTa');
             })
 
     }
 
 })
 
-
-.controller('ViewApplicationForTaController', function(applications, Application, $location, $window) {
+.controller('RejectedApplicationForTaController', function(applications, Application, $location, $window) {
 
     var vm = this;
 
@@ -87,18 +87,38 @@ angular.module('taCtrl', ['taService'])
                 $location.path('/viewApplicationForTa');
             })
 
+    }
 
-/*    socketio.on('application', function(data) {
-        vm.applications.push(data);
-    });
+})
 
-*/    }
 
-    vm.reject = function(id) {
+.controller('ViewApplicationForTaController', function(applications, Application, $location, $window, socketio) {
+
+    var vm = this;
+
+    vm.applications = applications.data;
+
+    vm.approve = function(id) {
         Application.approve(id)
             .then(function(response) {
                 vm.postData = {};
-                console.log(response)
+
+                vm.message = response.data.message;
+                    socketio.on('application', function(data) {
+        vm.applications.push(data);
+    });
+
+                $location.path('/viewApplicationForTa');
+            })
+    }
+
+
+
+
+    vm.reject = function(id) {
+        Application.reject(id)
+            .then(function(response) {
+                vm.postData = {};
                 vm.message = response.data.message;
                 $location.path('/viewApplicationForTa');
             })

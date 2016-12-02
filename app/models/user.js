@@ -9,7 +9,9 @@ var UserSchema = new Schema({
 	email: { type: String, required: true, index: { unique: true }},
 	password: { type: String, required: true, select: false},
 	rollNo: { type: String},
-	tag: { type: String, required:true}
+	tag: { type: String, required:true},
+	resetPasswordToken: String,
+	resetPasswordExpires: Date
 
 });
 

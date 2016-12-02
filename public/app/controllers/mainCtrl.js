@@ -41,13 +41,40 @@ angular.module('mainCtrl', [])
 
 			});
 	}
+	vm.doForgot = function() {
+
+		vm.processing = true;
+
+		vm.error = '';
+
+		Auth.forgot(vm.forgotData.email)
+			.success(function(data) {
+				vm.processing = false;
+
+
+			});
+	}
+
+	vm.doReset = function() {
+
+		vm.processing = true;
+
+		vm.error = '';
+
+		Auth.reset(vm.forgotData.email, vm.forgotData.password)
+			.success(function(data) {
+				vm.processing = false;
+
+
+			});
+	}
 
 
 	vm.doLogout = function() {
 		Auth.logout();
 				vm.user = {};
 
-		$location.path('/home');
+		$location.path('/logout');
 
 	}
 
